@@ -13,13 +13,17 @@
 
 ![image](https://github.com/user-attachments/assets/d912c398-0877-4d13-ab90-f58c85689f56)
 
+Проверим установку докера.
+
+![image](https://github.com/user-attachments/assets/35beb161-0232-401c-8bd9-775769a77995)
+
 И соберем из нее Docker-образ.
 
 ![image](https://github.com/user-attachments/assets/2e0ba375-54e3-4d9e-a320-4225f7b47c28)
 
 Запускаем контейнер и проверяем список запущенных контейнеров. 
 
-![image](https://github.com/user-attachments/assets/74d59090-9359-4891-b4b1-e002946a9c51)
+![image](https://github.com/user-attachments/assets/e46b9c95-b62a-4a1b-bbcf-b7486726888f)
 
 Проверяем работоспособность нашего API-калькулятора.
 
