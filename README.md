@@ -17,7 +17,7 @@
 
 ![image](https://github.com/user-attachments/assets/35beb161-0232-401c-8bd9-775769a77995)
 
-И соберем из нее Docker-образ.
+Соберем Docker-образ.
 
 ![image](https://github.com/user-attachments/assets/2e0ba375-54e3-4d9e-a320-4225f7b47c28)
 
