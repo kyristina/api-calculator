@@ -1,6 +1,5 @@
 stages:
   - update_version
-  - deploy
 
 update_version:
   stage: update_version
