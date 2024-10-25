@@ -1,0 +1,23 @@
+stages:
+  - update_version
+  - deploy
+
+update_version:
+  stage: update_version
+  script:
+    - echo "Updating calculator version..."
+    - |
+      if [ -f our-api-cal ]; then
+        CURRENT_our-api-cal=$(cat our-api-cal)
+        NEW_our-api-cal=$(echo $CURRENT_our-api-cal | awk -F. -v OFS=. '{$NF += 1 ; print}')
+        echo $NEW_our-api-cal > our-api-cal
+        git config --global user.name "kyristina"
+        git config --global user.email "kristyasss121314@gmail.com"
+        git add our-api-cal
+        git commit -m "Bump version to $NEW_our-api-cal"
+        git push origin HEAD
+      else
+        echo "our-api-cal file not found. Skipping version update."
+      fi
+  only:
+    - main
