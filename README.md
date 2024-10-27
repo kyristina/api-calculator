@@ -53,7 +53,8 @@
 Преходим к настройке пайплайна.
 Прописали простую конфигурацию пайплайна для обновления версии калькулятора (.gitlab-ci.yml) и запушили его в основную ветку репозитория.
 
-![image](https://github.com/user-attachments/assets/34f5354c-3258-4396-a4c3-138c8d529527)
+![image](https://github.com/user-attachments/assets/a90abaca-b66a-4ff5-ad6b-c91983637b4f)
+
 
 
 
