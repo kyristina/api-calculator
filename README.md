@@ -74,9 +74,15 @@
 
 ![image](https://github.com/user-attachments/assets/fb476c92-6655-4c39-97d0-59c4dfc6b94c)
 
-В настройках добавили ссылку на наш репозиторий GitHub.
+А также в настройках добавили ссылку на наш репозиторий GitHub.
 
 ![image](https://github.com/user-attachments/assets/b808b556-2d0e-46a4-b628-1430da8d9708)
+
+На GitHub настроили триггеры для автоматического обновления.
+
+![image](https://github.com/user-attachments/assets/d4df51dd-8c15-49f4-bd33-161890565015)
+
+
 
 
 
