@@ -30,7 +30,40 @@
 ![image](https://github.com/user-attachments/assets/b089cb8a-9ed2-469e-87e8-bc613c520399)
 
 ## 2. Создание пайплайна для обновления версии калькулятора
-Для начала мы проверили, установлен ли Git в терминале, чтобы настроить систему контроля версий нашего калькулятора.
+
+Первым этапом стала установка Jenkins на Ubuntu.
+
+Перед началом установки проверим, есть ли в системе пакет Java — без него Jenkins не будет работать.
+
+![image](https://github.com/user-attachments/assets/6b81f658-affc-43ce-a13e-f4af44a221c0)
+
+Сначала получаем ключ шифрования GPG с помощью команды **curl**. Ключ нужен для проверки подлинности пакетов, загружаемых из репозитория Jenkins. Чтобы два раза не вставать, установим ключ в систему командой **sudo tee**.
+После этого добавим репозиторий Jenkins в список пакетов Ubuntu.
+
+![image](https://github.com/user-attachments/assets/5f50ef5e-e504-4e94-8dfe-4027ac3c3fef)
+
+Обновляем список пакетов и устанавливаем Jenkins. 
+
+![image](https://github.com/user-attachments/assets/2f25235b-1579-4bb4-b052-16a7a6899c98)
+
+Установили ssh и проверили статус работы Jenkins.
+
+![image](https://github.com/user-attachments/assets/13a0cedf-7eaa-4684-afe7-04caf86710b2)
+
+Для нормальной работы Jenkins необходимо было открыть сетевой порт в брандмауре. Для этого открыли SSH, запустили брандмауэр, открыли сетевой порт 8080 и проверили статус.
+
+![image](https://github.com/user-attachments/assets/a6c16476-8d6e-4322-9731-7c948330a4dd)
+
+В интернете открыли окно разблокировки Jenkins по адресу http://10.0.2.15:8080, где 10.0.2.15 - IP сервера.
+
+![image](https://github.com/user-attachments/assets/1db1de4c-1531-4251-a637-42df112c421c)
+
+После этого устанавливаем дефолтный набор плагинов для Jenkins.
+
+![image](https://github.com/user-attachments/assets/f81c2eec-3088-4925-b41e-8267073f56bd)
+
+
+///Для начала мы проверили, установлен ли Git в терминале, чтобы настроить систему контроля версий нашего калькулятора.
 
 ![image](https://github.com/user-attachments/assets/e31c97b4-3641-4484-bbf8-f8b888e5f5eb)
 
@@ -53,7 +86,7 @@
 Преходим к настройке пайплайна.
 Прописали простую конфигурацию пайплайна для обновления версии калькулятора (.gitlab-ci.yml) и запушили его в основную ветку репозитория.
 
-![image](https://github.com/user-attachments/assets/a90abaca-b66a-4ff5-ad6b-c91983637b4f)
+![image](https://github.com/user-attachments/assets/a90abaca-b66a-4ff5-ad6b-c91983637b4f)_
 
 
 
