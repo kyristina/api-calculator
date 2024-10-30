@@ -62,31 +62,22 @@
 
 ![image](https://github.com/user-attachments/assets/f81c2eec-3088-4925-b41e-8267073f56bd)
 
+Далее создаем пайплайн.
 
-///Для начала мы проверили, установлен ли Git в терминале, чтобы настроить систему контроля версий нашего калькулятора.
+![image](https://github.com/user-attachments/assets/bc132ced-3318-4ed0-bed6-bf1d64c31a36)
 
-![image](https://github.com/user-attachments/assets/e31c97b4-3641-4484-bbf8-f8b888e5f5eb)
+Скрипт для обновления пайплайна.
 
-Далее мы клонировали репозиторий с GitHub.
+![image](https://github.com/user-attachments/assets/7781be99-941a-4c0d-a084-4476bc8dfec3)
 
-![image](https://github.com/user-attachments/assets/dfad34ab-8fff-4d34-a6f3-ae0c7c3dd3b2)
+Автоматический запуск пайплайна при изменении кода в репозитории.
 
-На виртуальной машине появились все файлы нашего репозитория.
+![image](https://github.com/user-attachments/assets/fb476c92-6655-4c39-97d0-59c4dfc6b94c)
 
-![image](https://github.com/user-attachments/assets/ea1ba96a-7502-4e4b-869b-71f73fcef6d4)
+В настройках добавили ссылку на наш репозиторий GitHub.
 
-Для проверки возможности внесения изменений в репозиторий с помощью Git, мы создали новый файл, добавили его, закоммитили и запушили, используя предварительно созданный токен репозитория.
+![image](https://github.com/user-attachments/assets/b808b556-2d0e-46a4-b628-1430da8d9708)
 
-![image](https://github.com/user-attachments/assets/34d01932-f41d-4990-a76f-994bbe207848)
-
-Проверили, что файл действительно появился.
-
-![image](https://github.com/user-attachments/assets/eeccca54-7a4b-40b3-985f-ccc2ad737704)
-
-Преходим к настройке пайплайна.
-Прописали простую конфигурацию пайплайна для обновления версии калькулятора (.gitlab-ci.yml) и запушили его в основную ветку репозитория.
-
-![image](https://github.com/user-attachments/assets/a90abaca-b66a-4ff5-ad6b-c91983637b4f)_
 
 
 
