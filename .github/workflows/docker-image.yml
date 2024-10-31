@@ -20,6 +20,12 @@ jobs:
       run: |
         python3 -m pip install semgrep
 
+    - name: Scan with Semgrep
+      uses: returntocorp/semgrep-action@v1
+      with:
+        config: auto
+      continue-on-error: false
+
     - name: Check Semgrep results
       run: |
         semgrep --config auto --json --output scanning-with-semgrep.json $CI_PROJECT_DIR
@@ -35,33 +41,26 @@ jobs:
       with:
         name: semgrep-report
         path: scanning-with-semgrep.json
-        
+
     - name: Install Grype
       run: |
         curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
-    - name: Scan with Semgrep
-      uses: returntocorp/semgrep-action@v1
-      with:
-        config: auto
-      continue-on-error: false
-      
+
     - name: Scan with Grype
-      uses: anchore/grype-action@v1
-      with:
-        image: my-image-name:$(date +%s)
-      continue-on-error: true
+      run: |
+        grype my-image-name:$(date +%s) -o json > grype-scan-results.json
 
     - name: Check Grype results
       run: |
-        if grep -q "CRITICAL" grype-report.json; then
-          echo "CRITICAL vulnerabilities found by Grype!"
+        if grep -q '"severity": "Critical"' grype-scan-results.json; then
+          echo "CRITICAL vulnerabilities found in Docker image!"
           exit 1
         else
-          echo "No CRITICAL vulnerabilities found by Grype."
+          echo "No CRITICAL vulnerabilities found in Docker image."
         fi
 
     - name: Upload Grype report
       uses: actions/upload-artifact@v4
       with:
         name: grype-report
-        path: grype-report.json
+        path: grype-scan-results.json
