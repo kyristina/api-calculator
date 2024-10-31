@@ -58,6 +58,11 @@
 
 ![image](https://github.com/user-attachments/assets/b785f3b8-ed87-4ee2-8d48-5fd095a5237b)
 
+Изменили калькулятор. После проверки всё работает!
+
+![image](https://github.com/user-attachments/assets/8adc5218-4bd8-47e4-9947-e62742ac0fa7)
+
+
 
 
 
