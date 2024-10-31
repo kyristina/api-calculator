@@ -16,6 +16,10 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
 
+    - name: Install Semgrep
+      run: |
+        python3 -m pip install semgrep
+
     - name: Scan with Semgrep
       uses: returntocorp/semgrep-action@v1
       with:
