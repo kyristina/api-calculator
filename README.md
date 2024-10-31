@@ -31,59 +31,32 @@
 
 ## 2. Создание пайплайна для обновления версии калькулятора
 
-Первым этапом стала установка Jenkins на Ubuntu.
+Для создания пайплайна мы проверили наличие git с помощью команды **git --version**, которая показала, что на данном компьютере установлена версия Git 2.20.1.
 
-Перед началом установки проверим, есть ли в системе пакет Java — без него Jenkins не будет работать.
+![image](https://github.com/user-attachments/assets/32ffce49-b4e7-4054-9615-20227769065c)
 
-![image](https://github.com/user-attachments/assets/6b81f658-affc-43ce-a13e-f4af44a221c0)
+Затем мы клонировали репозиторий с GitHub на локальный компьютер. 
 
-Сначала получаем ключ шифрования GPG с помощью команды **curl**. Ключ нужен для проверки подлинности пакетов, загружаемых из репозитория Jenkins. Чтобы два раза не вставать, установим ключ в систему командой **sudo tee**.
-После этого добавим репозиторий Jenkins в список пакетов Ubuntu.
+![image](https://github.com/user-attachments/assets/f7c70945-7f4e-41ef-a3f4-2dc2e8d10128)
 
-![image](https://github.com/user-attachments/assets/5f50ef5e-e504-4e94-8dfe-4027ac3c3fef)
+Процесс клонирования прошел успешно, и репозиторий был успешно скачан и распакован в локальный каталог api-calculator.
 
-Обновляем список пакетов и устанавливаем Jenkins. 
+![image](https://github.com/user-attachments/assets/c8b04aae-ebd9-4eef-b7d2-e352d310cb40)
 
-![image](https://github.com/user-attachments/assets/2f25235b-1579-4bb4-b052-16a7a6899c98)
+Вследствие чего файл в репозитории действительно появился.
 
-Установили ssh и проверили статус работы Jenkins.
+![image](https://github.com/user-attachments/assets/5527127b-9690-4bc1-9ff0-a05df4b326d4)
 
-![image](https://github.com/user-attachments/assets/13a0cedf-7eaa-4684-afe7-04caf86710b2)
+Проверка настройки системы контроля версий
 
-Для нормальной работы Jenkins необходимо было открыть сетевой порт в брандмауре. Для этого открыли SSH, запустили брандмауэр, открыли сетевой порт 8080 и проверили статус.
-
-![image](https://github.com/user-attachments/assets/a6c16476-8d6e-4322-9731-7c948330a4dd)
-
-В интернете открыли окно разблокировки Jenkins по адресу http://10.0.2.15:8080, где 10.0.2.15 - IP сервера.
-
-![image](https://github.com/user-attachments/assets/1db1de4c-1531-4251-a637-42df112c421c)
-
-После этого устанавливаем дефолтный набор плагинов для Jenkins.
-
-![image](https://github.com/user-attachments/assets/f81c2eec-3088-4925-b41e-8267073f56bd)
-
-Далее создаем пайплайн.
-
-![image](https://github.com/user-attachments/assets/bc132ced-3318-4ed0-bed6-bf1d64c31a36)
-
-Скрипт для обновления пайплайна.
-
-![image](https://github.com/user-attachments/assets/7781be99-941a-4c0d-a084-4476bc8dfec3)
-
-Автоматический запуск пайплайна при изменении кода в репозитории.
-
-![image](https://github.com/user-attachments/assets/fb476c92-6655-4c39-97d0-59c4dfc6b94c)
-
-А также в настройках добавили ссылку на наш репозиторий GitHub.
-
-![image](https://github.com/user-attachments/assets/b808b556-2d0e-46a4-b628-1430da8d9708)
-
-На GitHub настроили триггеры для автоматического обновления.
-
-![image](https://github.com/user-attachments/assets/d4df51dd-8c15-49f4-bd33-161890565015)
+![image](https://github.com/user-attachments/assets/eaeb398e-d5db-4fda-8a72-2b81bc3e0f2a)
 
 
+Изначально мы пробовали настроить CI/CD с помощью GitLab, но сайт работал некорректно. Затем мы приняли решение настроить непрерывную интеграцию с помощью Jenkins, но эксперимент, очевидно, неудачный... Пробуем настроить с помощью GitHub actions.
 
+Переходим во вкладку Actions нашего репозитория и используем рекомендованные пайплайны для нашего кода.
+
+![image](https://github.com/user-attachments/assets/b785f3b8-ed87-4ee2-8d48-5fd095a5237b)
 
 
 
