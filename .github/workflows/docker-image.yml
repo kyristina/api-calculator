@@ -48,7 +48,8 @@ jobs:
 
     - name: Scan with Grype
       run: |
-        grype my-image-name:$(date +%s) -o json > grype-scan-results.json
+        docker save my-image-name:$(date +%s) -o image.tar
+        grype dir:. -o json > grype-scan-results.json
 
     - name: Check Grype results
       run: |
