@@ -20,8 +20,7 @@ jobs:
       uses: returntocorp/semgrep-action@v1
       with:
         config: auto
-        output: scanning-with-semgrep.json
-        severity: CRITICAL
+        args: --json --output scanning-with-semgrep.json
       continue-on-error: false
 
     - name: Check Semgrep results
