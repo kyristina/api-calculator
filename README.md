@@ -31,7 +31,7 @@
 
 ## 2. Создание пайплайна для обновления версии калькулятора
 
-Для создания пайплайна мы проверили наличие git с помощью команды **git --version**, которая показала, что на данном компьютере установлена версия Git 2.20.1.
+Для создания пайплайна мы проверили наличие git с помощью команды **git --version**, которая показала, что на данной ВМ установлена версия Git 2.20.1.
 
 ![image](https://github.com/user-attachments/assets/32ffce49-b4e7-4054-9615-20227769065c)
 
@@ -39,28 +39,99 @@
 
 ![image](https://github.com/user-attachments/assets/f7c70945-7f4e-41ef-a3f4-2dc2e8d10128)
 
-Процесс клонирования прошел успешно, и репозиторий был успешно скачан и распакован в локальный каталог api-calculator.
+Процесс клонирования прошел успешно, и репозиторий был скачан и распакован в локальный каталог api-calculator.
 
 ![image](https://github.com/user-attachments/assets/c8b04aae-ebd9-4eef-b7d2-e352d310cb40)
+
+Проверка настройки системы контроля версий. Создали новый файл, добавили его в папку с удаленным репозиторием на ВМ, закоммитили и запушили его на GitHub.
+
+![image](https://github.com/user-attachments/assets/eaeb398e-d5db-4fda-8a72-2b81bc3e0f2a)
 
 Вследствие чего файл в репозитории действительно появился.
 
 ![image](https://github.com/user-attachments/assets/5527127b-9690-4bc1-9ff0-a05df4b326d4)
 
-Проверка настройки системы контроля версий
+Далее мы пробовали настроить CI/CD с помощью GitLab, но сайт работал некорректно. Затем мы приняли решение настроить непрерывную интеграцию с помощью Jenkins, но эксперимент, очевидно, неудачный... Пробуем настроить с помощью GitHub actions.
 
-![image](https://github.com/user-attachments/assets/eaeb398e-d5db-4fda-8a72-2b81bc3e0f2a)
-
-
-Изначально мы пробовали настроить CI/CD с помощью GitLab, но сайт работал некорректно. Затем мы приняли решение настроить непрерывную интеграцию с помощью Jenkins, но эксперимент, очевидно, неудачный... Пробуем настроить с помощью GitHub actions.
-
-Переходим во вкладку Actions нашего репозитория и используем рекомендованные пайплайны для нашего кода.
+Переходим во вкладку Actions нашего репозитория и используем рекомендованные пайплайны для нашего кода. Данный пайплайн как раз при каждом пуше кода пересобирает Docker-контейнер нашего калькулятора.
 
 ![image](https://github.com/user-attachments/assets/b785f3b8-ed87-4ee2-8d48-5fd095a5237b)
 
 Изменили калькулятор. После проверки всё работает!
 
 ![image](https://github.com/user-attachments/assets/8adc5218-4bd8-47e4-9947-e62742ac0fa7)
+
+## 3. Внедрение открытых инструментов безопасности в пайплайн
+
+Мы выбрали добавление сканирования кода с помощью Trivy и Semgrep. Semgrep будет использоваться для статического анализа кода, а Trivy будет использоваться для сканирования Docker-образа на наличие уязвимостей. Для этого обновили наш пайплайн.
+
+```
+name: our-pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
+    - name: Scan with Semgrep
+      uses: returntocorp/semgrep-action@v1
+      with:
+        config: auto
+        output: scanning-with-semgrep.json
+        severity: CRITICAL
+      continue-on-error: false
+
+    - name: Check Semgrep results
+      run: |
+        if grep -q '"severity": "CRITICAL"' scanning-with-semgrep.json; then
+          echo "CRITICAL vulnerabilities found!"
+          exit 1
+        else
+          echo "No CRITICAL vulnerabilities found."
+        fi
+
+    - name: Scan with Trivy
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: my-image-name:$(date +%s)
+        format: json
+        output: scanning-with-trivy.json
+        exit-code: '1'
+        severity: CRITICAL
+      continue-on-error: false
+
+    - name: Check Trivy results
+      run: |
+        if grep -q '"Severity": "CRITICAL"' scanning-with-trivy.json; then
+          echo "CRITICAL vulnerabilities found!"
+          exit 1
+        else
+          echo "No CRITICAL vulnerabilities found."
+        fi
+
+    - name: Upload Semgrep report
+      uses: actions/upload-artifact@v2
+      with:
+        name: semgrep-report
+        path: scanning-with-semgrep.json
+
+    - name: Upload Trivy report
+      uses: actions/upload-artifact@v2
+      with:
+        name: trivy-report
+        path: scanning-with-trivy.json
+```
 
 
 
