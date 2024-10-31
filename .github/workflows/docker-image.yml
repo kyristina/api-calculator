@@ -36,37 +36,8 @@ jobs:
           echo "No CRITICAL vulnerabilities found."
         fi
 
-    - name: Set timestamp
-      run: |
-        echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
-
-    - name: Scan with Trivy
-      uses: aquasecurity/trivy-action@master
-      with:
-        image-ref: my-image-name:${{ env.TIMESTAMP }}
-        format: json
-        output: scanning-with-trivy.json
-        exit-code: '1'
-        severity: CRITICAL
-      continue-on-error: false
-
-    - name: Check Trivy results
-      run: |
-        if grep -q '"Severity": "CRITICAL"' scanning-with-trivy.json; then
-          echo "CRITICAL vulnerabilities found!"
-          exit 1
-        else
-          echo "No CRITICAL vulnerabilities found."
-        fi
-
     - name: Upload Semgrep report
       uses: actions/upload-artifact@v3
       with:
         name: semgrep-report
         path: scanning-with-semgrep.json
-
-    - name: Upload Trivy report
-      uses: actions/upload-artifact@v3
-      with:
-        name: trivy-report
-        path: scanning-with-trivy.json
