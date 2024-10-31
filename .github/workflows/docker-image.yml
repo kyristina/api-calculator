@@ -20,11 +20,11 @@ jobs:
       uses: returntocorp/semgrep-action@v1
       with:
         config: auto
-        args: --json --output scanning-with-semgrep.json
       continue-on-error: false
 
     - name: Check Semgrep results
       run: |
+        semgrep --config auto --json --output scanning-with-semgrep.json $CI_PROJECT_DIR
         if grep -q '"severity": "CRITICAL"' scanning-with-semgrep.json; then
           echo "CRITICAL vulnerabilities found!"
           exit 1
