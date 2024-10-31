@@ -37,7 +37,28 @@ jobs:
         fi
 
     - name: Upload Semgrep report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: semgrep-report
         path: scanning-with-semgrep.json
+
+    - name: Scan with Grype
+      uses: anchore/grype-action@v1
+      with:
+        image: my-image-name:$(date +%s)
+      continue-on-error: true
+
+    - name: Check Grype results
+      run: |
+        if grep -q "CRITICAL" grype-report.json; then
+          echo "CRITICAL vulnerabilities found by Grype!"
+          exit 1
+        else
+          echo "No CRITICAL vulnerabilities found by Grype."
+        fi
+
+    - name: Upload Grype report
+      uses: actions/upload-artifact@v4
+      with:
+        name: grype-report
+        path: grype-report.json
