@@ -133,8 +133,9 @@ jobs:
         path: scanning-with-trivy.json
 ```
 
+При пуше обновленного пайплайна Semgrep сразу обнаружил критическую уязвимость в нашем коде. Чтобы избежать этой ошибки, мы исправили код ((изменили параметр host='127.0.0.1').
 
-
+![image](https://github.com/user-attachments/assets/ac587c5c-0d97-44b1-914e-4351deebaca1)
 
 
 
