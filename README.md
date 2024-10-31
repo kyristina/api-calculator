@@ -82,18 +82,25 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      id: build_image
+      run: |
+        IMAGE_TAG="my-image-name:$(date +%s)"
+        docker build . --file Dockerfile --tag $IMAGE_TAG
+        echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+
+    - name: Install Semgrep
+      run: |
+        python3 -m pip install semgrep
 
     - name: Scan with Semgrep
       uses: returntocorp/semgrep-action@v1
       with:
         config: auto
-        output: scanning-with-semgrep.json
-        severity: CRITICAL
       continue-on-error: false
 
     - name: Check Semgrep results
       run: |
+        semgrep --config auto --json --output scanning-with-semgrep.json $CI_PROJECT_DIR
         if grep -q '"severity": "CRITICAL"' scanning-with-semgrep.json; then
           echo "CRITICAL vulnerabilities found!"
           exit 1
@@ -101,42 +108,45 @@ jobs:
           echo "No CRITICAL vulnerabilities found."
         fi
 
-    - name: Scan with Trivy
-      uses: aquasecurity/trivy-action@master
-      with:
-        image-ref: my-image-name:$(date +%s)
-        format: json
-        output: scanning-with-trivy.json
-        exit-code: '1'
-        severity: CRITICAL
-      continue-on-error: false
-
-    - name: Check Trivy results
-      run: |
-        if grep -q '"Severity": "CRITICAL"' scanning-with-trivy.json; then
-          echo "CRITICAL vulnerabilities found!"
-          exit 1
-        else
-          echo "No CRITICAL vulnerabilities found."
-        fi
-
     - name: Upload Semgrep report
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: semgrep-report
         path: scanning-with-semgrep.json
 
-    - name: Upload Trivy report
-      uses: actions/upload-artifact@v2
+    - name: Install Grype
+      run: |
+        curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+
+    - name: Scan with Grype
+      run: |
+        docker save ${{ env.IMAGE_TAG }} -o image.tar
+        grype image.tar -o json > grype-scan-results.json
+
+    - name: Check Grype results
+      run: |
+        if grep -q '"severity": "Critical"' grype-scan-results.json; then
+          echo "CRITICAL vulnerabilities found in Docker image!"
+          exit 1
+        else
+          echo "No CRITICAL vulnerabilities found in Docker image."
+        fi
+
+    - name: Upload Grype report
+      uses: actions/upload-artifact@v4
       with:
-        name: trivy-report
-        path: scanning-with-trivy.json
+        name: grype-report
+        path: grype-scan-results.json
+
 ```
 
 При пуше обновленного пайплайна Semgrep сразу обнаружил критическую уязвимость в нашем коде. Чтобы избежать этой ошибки, мы исправили код (изменили параметр host='127.0.0.1').
 
 ![image](https://github.com/user-attachments/assets/ac587c5c-0d97-44b1-914e-4351deebaca1)
 
+После успешного запуска пайплайна, у нас появились артефакты.
+
+![image](https://github.com/user-attachments/assets/e37ff8b0-c9fe-4415-b6d3-7ae0a35ef678)
 
 
 
