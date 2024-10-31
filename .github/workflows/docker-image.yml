@@ -36,6 +36,10 @@ jobs:
           echo "No CRITICAL vulnerabilities found."
         fi
 
+    - name: Set timestamp
+      run: |
+        echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
+
     - name: Scan with Trivy
       uses: aquasecurity/trivy-action@master
       with:
@@ -66,7 +70,3 @@ jobs:
       with:
         name: trivy-report
         path: scanning-with-trivy.json
-
-    - name: Set timestamp
-      run: |
-        echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
