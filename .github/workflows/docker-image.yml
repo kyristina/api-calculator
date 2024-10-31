@@ -1,4 +1,4 @@
-name: update
+name: our-pipeline
 
 on:
   push:
@@ -7,12 +7,59 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+
+    - name: Scan with Semgrep
+      uses: returntocorp/semgrep-action@v1
+      with:
+        config: auto
+        output: scanning-with-semgrep.json
+        severity: CRITICAL
+      continue-on-error: false
+
+    - name: Check Semgrep results
+      run: |
+        if grep -q '"severity": "CRITICAL"' scanning-with-semgrep.json; then
+          echo "CRITICAL vulnerabilities found!"
+          exit 1
+        else
+          echo "No CRITICAL vulnerabilities found."
+        fi
+
+    - name: Scan with Trivy
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: my-image-name:$(date +%s)
+        format: json
+        output: scanning-with-trivy.json
+        exit-code: '1'
+        severity: CRITICAL
+      continue-on-error: false
+
+    - name: Check Trivy results
+      run: |
+        if grep -q '"Severity": "CRITICAL"' scanning-with-trivy.json; then
+          echo "CRITICAL vulnerabilities found!"
+          exit 1
+        else
+          echo "No CRITICAL vulnerabilities found."
+        fi
+
+    - name: Upload Semgrep report
+      uses: actions/upload-artifact@v2
+      with:
+        name: semgrep-report
+        path: scanning-with-semgrep.json
+
+    - name: Upload Trivy report
+      uses: actions/upload-artifact@v2
+      with:
+        name: trivy-report
+        path: scanning-with-trivy.json
